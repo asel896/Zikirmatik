@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:id="@+id/menu_light_mode"
+    android:title="Aydınlık Mod" />
+<item
+    android:id="@+id/menu_dark_mode"
+    android:title="Karanlık Mod" />
+<item
+    android:id="@+id/menu_system_default"
+    android:title="Sistem Varsayılanı" />
+</menu>
