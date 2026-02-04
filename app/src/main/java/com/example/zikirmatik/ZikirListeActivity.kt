@@ -16,7 +16,7 @@ class ZikirListeActivity : AppCompatActivity() {
 
         val listView = findViewById<ListView>(R.id.listViewZikirler)
 
-        // Eklediğimiz 10 Zikir
+
         val zikirler = arrayOf(
             "+ Kendin Yaz...",
             "Sübhanallah", "Elhamdülillah", "Lâ ilâhe illallâh",
@@ -33,14 +33,14 @@ class ZikirListeActivity : AppCompatActivity() {
             val intent = Intent()
             intent.putExtra("secilen_zikir", zikirler[position])
             setResult(RESULT_OK, intent)
-            finish() // Sayfayı kapat ve geri dön
+            finish()
         }
 
-        // onCreate içine ekle:
+
         val editOzelZikir = findViewById<EditText>(R.id.editOzelZikirYaz)
         val btnEkle = findViewById<Button>(R.id.btnOzelZikirEkle)
 
-// 1. Mevcut Listeye Tıklama (Hali hazırda olan kodun)
+
         listView.setOnItemClickListener { _, _, position, _ ->
             val intent = Intent()
             intent.putExtra("secilen_zikir", zikirler[position])
@@ -48,7 +48,7 @@ class ZikirListeActivity : AppCompatActivity() {
             finish()
         }
 
-// 2. Kendi Yazdığın Zikri Ekleme Butonu
+
         btnEkle.setOnClickListener {
             val ozelMetin = editOzelZikir.text.toString()
             if (ozelMetin.isNotEmpty()) {

@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        // Görsel Bileşenler
+
         val txtSayac = findViewById<TextView>(R.id.txtSayac)
         val txtHedef = findViewById<TextView>(R.id.txtHedef)
         val txtKalan = findViewById<TextView>(R.id.txtKalan)
@@ -59,28 +59,28 @@ class MainActivity : AppCompatActivity() {
         val btnSifirla = findViewById<Button>(R.id.btnSifirla)
         val btnGeriAl = findViewById<Button>(R.id.btnGeriAl)
 
-        // Hafızadan Verileri Yükleme
+
         val sharedPref = getSharedPreferences("ZikirmatikHafiza", MODE_PRIVATE)
         sayac = sharedPref.getInt("sayac_anahtari", 0)
         hedef = sharedPref.getInt("hedef_anahtari", 33)
         toplamSayac = sharedPref.getInt("toplam_anahtari", 0)
         val sonZikir = sharedPref.getString("son_zikir", "Zikir Seçmek İçin Dokun")
 
-        // Ekranı İlk Güncelleme
+
         txtSayac.text = sayac.toString()
         txtHedef.text = "/ $hedef"
         txtZikirMetni.text = sonZikir
         txtToplam.text = "Toplam: $toplamSayac"
         txtKalan.text = if (sayac >= hedef) "Zikir Tamamlandı!" else "${hedef - sayac} zikir kaldı"
 
-        // --- Toplam Sayacı Etkileşimleri ---
 
-        // 1. Kısa Tıklama (Bilgilendirme)
+
+
         txtToplam.setOnClickListener {
             Toast.makeText(this, "Sıfırlamak için üzerine uzun basın", Toast.LENGTH_SHORT).show()
         }
 
-        // 2. Uzun Tıklama (Sıfırlama Onayı)
+
         txtToplam.setOnLongClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Toplam Sayacı Sıfırla")
@@ -96,13 +96,13 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        // --- Zikir Listesi ---
+
         txtZikirMetni.setOnClickListener {
             val intent = Intent(this, ZikirListeActivity::class.java)
             startActivityForResult(intent, 100)
         }
 
-        // --- Zikir Çekme Butonu ---
+
         anaButon.setOnClickListener {
             if (sayac < hedef) {
                 sayac++
@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Hedef Ayarları
+
         btn33.setOnClickListener { hedefGuncelle(33, txtHedef, txtKalan, btn33, listOf(btn99, btn100), btnAyarla) }
         btn99.setOnClickListener { hedefGuncelle(99, txtHedef, txtKalan, btn99, listOf(btn33, btn100), btnAyarla) }
         btn100.setOnClickListener { hedefGuncelle(100, txtHedef, txtKalan, btn100, listOf(btn33, btn99), btnAyarla) }
@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Sıfırla ve Geri Al
+        
         btnSifirla.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 btnSifirla.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#4A7C59"))
