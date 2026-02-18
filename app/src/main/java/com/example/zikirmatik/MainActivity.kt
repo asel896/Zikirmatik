@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        
+
         btnSifirla.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 btnSifirla.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#4A7C59"))
