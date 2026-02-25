@@ -20,9 +20,17 @@
             android:title="Sistem Varsayılanı"
             android:icon="@android:drawable/ic_menu_manage" />
         <item
-            android:id="@+id/menu_takvim"
+            android:id="@+id/menu_ilham"
             android:title="Günün İlhamı"
             android:icon="@android:drawable/ic_menu_my_calendar" />
+        <item
+            android:id="@+id/nav_dua"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="Günün Duası" />
+        <item
+            android:id="@+id/menu_kuran"
+            android:icon="@android:drawable/ic_menu_sort_by_size"
+            android:title="Kur'an-ı Kerim" />
     </group>
 
 </menu>

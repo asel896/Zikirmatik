@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F4F9F4"
@@ -9,17 +11,16 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="15dp"
-        app:cardElevation="8dp">
+        app:cardCornerRadius="16dp"
+        app:cardElevation="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="25dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="24dp">
 
             <TextView
-                android:id="@+id/textViewDuaBaslik"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Günün Duası"
@@ -28,8 +29,8 @@
                 android:textStyle="bold" />
 
             <View
-                android:layout_width="50dp"
-                android:layout_height="2dp"
+                android:layout_width="60dp"
+                android:layout_height="3dp"
                 android:layout_marginTop="8dp"
                 android:background="#4A7C59" />
 
@@ -38,10 +39,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Allah'ım! Bize dünyada iyilik ver, ahirette de iyilik ver."
+                android:text="Dua yükleniyor..."
                 android:textColor="#333333"
-                android:textSize="18sp"
-                android:lineSpacingExtra="4sp" />
+                android:textSize="19sp"
+                android:lineSpacingExtra="6sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/textDuaKaynak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="16dp"
+                android:text="- Kaynak"
+                android:textColor="#777777"
+                android:textSize="14sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -49,8 +61,10 @@
         android:id="@+id/btnYeniDua"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="32dp"
         android:backgroundTint="#4A7C59"
-        android:text="Yeni Dua Gör"
-        android:textColor="@android:color/white" />
+        android:text="Başka Bir Dua Gör"
+        android:textColor="@android:color/white"
+        android:padding="12dp" />
+
 </LinearLayout>

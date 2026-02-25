@@ -42,23 +42,40 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.menu_takvim -> {
+                R.id.menu_ilham -> {
                     val intent = Intent(this, TakvimActivity::class.java)
                     startActivity(intent)
                 }
+
                 R.id.menu_sadaka_gunlugu -> {
                     val intent = Intent(this, SadakaActivity::class.java)
                     startActivity(intent)
                 }
+
+                // --- GÜNÜN DUASI BURAYA EKLENDİ ---
+                R.id.nav_dua -> {
+                    val intent = Intent(this, DuaActivity::class.java)
+                    startActivity(intent)
+                }
+
                 R.id.menu_light_mode -> {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 }
+
                 R.id.menu_dark_mode -> {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 }
+
                 R.id.menu_system_default -> {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 }
+
+                // ... diğerlerinin altına ekle
+                R.id.menu_kuran -> {
+                    val intent = Intent(this, KuranActivity::class.java)
+                    startActivity(intent)
+                }
+
             }
             drawerLayout.closeDrawers()
             true
@@ -81,7 +98,6 @@ class MainActivity : AppCompatActivity() {
 
         // --- ZİKİRMATİK MANTIK İŞLEMLERİ ---
 
-        // Sayaç Artırma (Ekrana Tıklayınca)
         zikirAlani.setOnClickListener {
             sayac++
             toplamZikir++
@@ -89,23 +105,26 @@ class MainActivity : AppCompatActivity() {
             titresimVer(50)
 
             if (sayac == hedef) {
-                titresimVer(500) // Hedefe ulaşınca uzun titreşim
+                titresimVer(500)
                 Toast.makeText(this, "Hedefe ulaşıldı!", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Hedef Butonları
-        btn33.setOnClickListener { hedef = 33; sayac = 0; guncelle(txtSayac, txtHedef, txtKalan, txtToplam) }
-        btn99.setOnClickListener { hedef = 99; sayac = 0; guncelle(txtSayac, txtHedef, txtKalan, txtToplam) }
-        btn100.setOnClickListener { hedef = 100; sayac = 0; guncelle(txtSayac, txtHedef, txtKalan, txtToplam) }
+        btn33.setOnClickListener {
+            hedef = 33; sayac = 0; guncelle(txtSayac, txtHedef, txtKalan, txtToplam)
+        }
+        btn99.setOnClickListener {
+            hedef = 99; sayac = 0; guncelle(txtSayac, txtHedef, txtKalan, txtToplam)
+        }
+        btn100.setOnClickListener {
+            hedef = 100; sayac = 0; guncelle(txtSayac, txtHedef, txtKalan, txtToplam)
+        }
 
-        // Sıfırla
         btnSifirla.setOnClickListener {
             sayac = 0
             guncelle(txtSayac, txtHedef, txtKalan, txtToplam)
         }
 
-        // Geri Al
         btnGeriAl.setOnClickListener {
             if (sayac > 0) {
                 sayac--
@@ -114,7 +133,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Özel Sayı Ayarla
         btnAyarla.setOnClickListener {
             val ozel = editOzelSayı.text.toString()
             if (ozel.isNotEmpty()) {
@@ -126,7 +144,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Arayüzü Güncelleyen Fonksiyon
     private fun guncelle(s: TextView, h: TextView, k: TextView, t: TextView) {
         s.text = sayac.toString()
         h.text = "/ $hedef"
@@ -135,7 +152,6 @@ class MainActivity : AppCompatActivity() {
         t.text = "Toplam: $toplamZikir"
     }
 
-    // Titreşim Fonksiyonu
     private fun titresimVer(sure: Long) {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
@@ -153,7 +169,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Menü açılması için gerekli override
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {
             return true

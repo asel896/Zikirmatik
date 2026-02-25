@@ -2,4 +2,5 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="kuran_ana_yesil">#4A7C59</color> <color name="kuran_acik_yesil">#F4F9F4</color> <color name="kuran_koyu_yesil">#355E43</color>
 </resources>

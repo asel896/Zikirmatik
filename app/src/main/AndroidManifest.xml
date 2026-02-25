@@ -15,6 +15,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Zikirmatik">
         <activity
+            android:name=".CuzAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".AyetAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".AyetActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SureAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".SureModel"
+            android:exported="false" />
+        <activity
+            android:name=".KuranActivity"
+            android:exported="false" />
+        <activity
             android:name=".DuaActivity"
             android:exported="false" />
         <activity
