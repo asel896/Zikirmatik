@@ -1,0 +1,56 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4F9F4"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="25dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewDuaBaslik"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Günün Duası"
+                android:textColor="#4A7C59"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="50dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
+                android:background="#4A7C59" />
+
+            <TextView
+                android:id="@+id/textViewDuaIcerik"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Allah'ım! Bize dünyada iyilik ver, ahirette de iyilik ver."
+                android:textColor="#333333"
+                android:textSize="18sp"
+                android:lineSpacingExtra="4sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/btnYeniDua"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="#4A7C59"
+        android:text="Yeni Dua Gör"
+        android:textColor="@android:color/white" />
+</LinearLayout>
