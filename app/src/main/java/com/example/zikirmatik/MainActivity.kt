@@ -2,227 +2,161 @@ package com.example.zikirmatik
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.view.Menu
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var toggle: ActionBarDrawerToggle
     private var sayac = 0
     private var hedef = 33
-    private var toplamSayac = 0
-
-    private lateinit var txtZikirMetni: TextView
-    private lateinit var txtToplam: TextView
+    private var toplamZikir = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        // --- NAVIGATION DRAWER (YAN MENÜ) AYARLARI ---
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+        val navView = findViewById<NavigationView>(R.id.navView)
+
+        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_takvim -> {
+                    val intent = Intent(this, TakvimActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.menu_sadaka_gunlugu -> {
+                    val intent = Intent(this, SadakaActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.menu_light_mode -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+                R.id.menu_dark_mode -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+                R.id.menu_system_default -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+            }
+            drawerLayout.closeDrawers()
+            true
         }
 
-
+        // --- ZİKİRMATİK BUTON VE GÖRÜNÜM TANIMLAMALARI ---
         val txtSayac = findViewById<TextView>(R.id.txtSayac)
         val txtHedef = findViewById<TextView>(R.id.txtHedef)
         val txtKalan = findViewById<TextView>(R.id.txtKalan)
-        txtZikirMetni = findViewById(R.id.txtZikirMetni)
-        txtToplam = findViewById(R.id.txtToplamZikir)
+        val txtToplam = findViewById<TextView>(R.id.txtToplamZikir)
+        val zikirAlani = findViewById<FrameLayout>(R.id.zikirButonAlani)
 
-        val anaButon = findViewById<FrameLayout>(R.id.zikirButonAlani)
-        val editOzel = findViewById<EditText>(R.id.editTextText)
         val btn33 = findViewById<Button>(R.id.button2)
         val btn99 = findViewById<Button>(R.id.button3)
         val btn100 = findViewById<Button>(R.id.button4)
-        val btnAyarla = findViewById<Button>(R.id.btnAyarla)
         val btnSifirla = findViewById<Button>(R.id.btnSifirla)
         val btnGeriAl = findViewById<Button>(R.id.btnGeriAl)
+        val btnAyarla = findViewById<Button>(R.id.btnAyarla)
+        val editOzelSayı = findViewById<EditText>(R.id.editTextText)
 
+        // --- ZİKİRMATİK MANTIK İŞLEMLERİ ---
 
-        val sharedPref = getSharedPreferences("ZikirmatikHafiza", MODE_PRIVATE)
-        sayac = sharedPref.getInt("sayac_anahtari", 0)
-        hedef = sharedPref.getInt("hedef_anahtari", 33)
-        toplamSayac = sharedPref.getInt("toplam_anahtari", 0)
-        val sonZikir = sharedPref.getString("son_zikir", "Zikir Seçmek İçin Dokun")
+        // Sayaç Artırma (Ekrana Tıklayınca)
+        zikirAlani.setOnClickListener {
+            sayac++
+            toplamZikir++
+            guncelle(txtSayac, txtHedef, txtKalan, txtToplam)
+            titresimVer(50)
 
-
-        txtSayac.text = sayac.toString()
-        txtHedef.text = "/ $hedef"
-        txtZikirMetni.text = sonZikir
-        txtToplam.text = "Toplam: $toplamSayac"
-        txtKalan.text = if (sayac >= hedef) "Zikir Tamamlandı!" else "${hedef - sayac} zikir kaldı"
-
-
-
-
-        txtToplam.setOnClickListener {
-            Toast.makeText(this, "Sıfırlamak için üzerine uzun basın", Toast.LENGTH_SHORT).show()
-        }
-
-
-        txtToplam.setOnLongClickListener {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Toplam Sayacı Sıfırla")
-            builder.setMessage("Tüm zikir geçmişinizi silmek istediğinize emin misiniz?")
-            builder.setPositiveButton("Evet") { _, _ ->
-                toplamSayac = 0
-                txtToplam.text = "Toplam: 0"
-                verileriKaydet()
-                Toast.makeText(this, "İstatistikler sıfırlandı", Toast.LENGTH_SHORT).show()
-            }
-            builder.setNegativeButton("İptal", null)
-            builder.show()
-            true
-        }
-
-
-        txtZikirMetni.setOnClickListener {
-            val intent = Intent(this, ZikirListeActivity::class.java)
-            startActivityForResult(intent, 100)
-        }
-
-
-        anaButon.setOnClickListener {
-            if (sayac < hedef) {
-                sayac++
-                toplamSayac++
-
-                txtSayac.text = sayac.toString()
-                txtToplam.text = "Toplam: $toplamSayac"
-
-                if (sayac == hedef) {
-                    txtKalan.text = "Zikir Tamamlandı!"
-                    titret(500)
-                } else {
-                    txtKalan.text = "${hedef - sayac} zikir kaldı"
-                    titret(50)
-                }
-                verileriKaydet()
+            if (sayac == hedef) {
+                titresimVer(500) // Hedefe ulaşınca uzun titreşim
+                Toast.makeText(this, "Hedefe ulaşıldı!", Toast.LENGTH_SHORT).show()
             }
         }
 
+        // Hedef Butonları
+        btn33.setOnClickListener { hedef = 33; sayac = 0; guncelle(txtSayac, txtHedef, txtKalan, txtToplam) }
+        btn99.setOnClickListener { hedef = 99; sayac = 0; guncelle(txtSayac, txtHedef, txtKalan, txtToplam) }
+        btn100.setOnClickListener { hedef = 100; sayac = 0; guncelle(txtSayac, txtHedef, txtKalan, txtToplam) }
 
-        btn33.setOnClickListener { hedefGuncelle(33, txtHedef, txtKalan, btn33, listOf(btn99, btn100), btnAyarla) }
-        btn99.setOnClickListener { hedefGuncelle(99, txtHedef, txtKalan, btn99, listOf(btn33, btn100), btnAyarla) }
-        btn100.setOnClickListener { hedefGuncelle(100, txtHedef, txtKalan, btn100, listOf(btn33, btn99), btnAyarla) }
+        // Sıfırla
+        btnSifirla.setOnClickListener {
+            sayac = 0
+            guncelle(txtSayac, txtHedef, txtKalan, txtToplam)
+        }
 
+        // Geri Al
+        btnGeriAl.setOnClickListener {
+            if (sayac > 0) {
+                sayac--
+                if (toplamZikir > 0) toplamZikir--
+                guncelle(txtSayac, txtHedef, txtKalan, txtToplam)
+            }
+        }
+
+        // Özel Sayı Ayarla
         btnAyarla.setOnClickListener {
-            val girilenSayi = editOzel.text.toString()
-            if (girilenSayi.isNotEmpty()) {
-                hedef = girilenSayi.toInt()
-                txtHedef.text = "/ $hedef"
-                txtKalan.text = if (sayac >= hedef) "Zikir Tamamlandı!" else "${hedef - sayac} zikir kaldı"
-                btnAyarla.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#4A7C59"))
-                listOf(btn33, btn99, btn100).forEach { it.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#262626")) }
-                editOzel.clearFocus()
-                verileriKaydet()
-            }
-        }
-
-
-        btnSifirla.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                btnSifirla.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#4A7C59"))
+            val ozel = editOzelSayı.text.toString()
+            if (ozel.isNotEmpty()) {
+                hedef = ozel.toInt()
                 sayac = 0
-                txtSayac.text = "0"
-                txtKalan.text = "$hedef zikir kaldı"
-                verileriKaydet()
-            } else if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
-                btnSifirla.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#262626"))
+                guncelle(txtSayac, txtHedef, txtKalan, txtToplam)
+                editOzelSayı.text.clear()
             }
-            true
-        }
-
-        btnGeriAl.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                btnGeriAl.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#4A7C59"))
-                if (sayac > 0) {
-                    sayac--
-                    txtSayac.text = sayac.toString()
-                    txtKalan.text = "${hedef - sayac} zikir kaldı"
-                    verileriKaydet()
-                }
-            } else if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
-                btnGeriAl.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#262626"))
-            }
-            true
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 100 && resultCode == RESULT_OK) {
-            val gelenZikir = data?.getStringExtra("secilen_zikir")
-            txtZikirMetni.text = gelenZikir
-            val sharedPref = getSharedPreferences("ZikirmatikHafiza", MODE_PRIVATE)
-            sharedPref.edit().putString("son_zikir", gelenZikir).apply()
-        }
+    // Arayüzü Güncelleyen Fonksiyon
+    private fun guncelle(s: TextView, h: TextView, k: TextView, t: TextView) {
+        s.text = sayac.toString()
+        h.text = "/ $hedef"
+        val kalan = if (hedef - sayac > 0) hedef - sayac else 0
+        k.text = "$kalan zikir kaldı"
+        t.text = "Toplam: $toplamZikir"
     }
 
-    private fun hedefGuncelle(yeniHedef: Int, hView: TextView, kView: TextView, sBtn: Button, dBtns: List<Button>, aBtn: Button) {
-        hedef = yeniHedef
-        hView.text = "/ $hedef"
-        kView.text = if (sayac >= hedef) "Zikir Tamamlandı!" else "${hedef - sayac} zikir kaldı"
-        sBtn.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#4A7C59"))
-        dBtns.forEach { it.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#262626")) }
-        aBtn.backgroundTintList = android.content.res.ColorStateList.valueOf(Color.parseColor("#262626"))
-        verileriKaydet()
-    }
-
-    private fun verileriKaydet() {
-        val sharedPref = getSharedPreferences("ZikirmatikHafiza", MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.putInt("sayac_anahtari", sayac)
-        editor.putInt("hedef_anahtari", hedef)
-        editor.putInt("toplam_anahtari", toplamSayac)
-        editor.apply()
-    }
-
-    private fun titret(sure: Long = 50) {
+    // Titreşim Fonksiyonu
+    private fun titresimVer(sure: Long) {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             vibratorManager.defaultVibrator
         } else {
-            @Suppress("DEPRECATION") getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            @Suppress("DEPRECATION")
+            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createOneShot(sure, VibrationEffect.DEFAULT_AMPLITUDE))
         } else {
-            @Suppress("DEPRECATION") vibrator.vibrate(sure)
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(sure)
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.options_menu, menu)
-        return true
-    }
-
+    // Menü açılması için gerekli override
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_light_mode -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            R.id.menu_dark_mode -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            R.id.menu_system_default -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
         }
         return super.onOptionsItemSelected(item)
     }

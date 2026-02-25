@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-<item
-    android:id="@+id/menu_light_mode"
-    android:title="Aydınlık Mod" />
-<item
-    android:id="@+id/menu_dark_mode"
-    android:title="Karanlık Mod" />
-<item
-    android:id="@+id/menu_system_default"
-    android:title="Sistem Varsayılanı" />
+
+    <item
+        android:id="@+id/menu_sadaka_gunlugu"
+        android:title="Sadaka Günlüğü"
+        android:icon="@android:drawable/ic_menu_edit" />
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_light_mode"
+            android:title="Açık Tema"
+            android:icon="@android:drawable/ic_menu_day" />
+        <item
+            android:id="@+id/menu_dark_mode"
+            android:title="Koyu Tema"
+            android:icon="@android:drawable/ic_menu_recent_history" />
+        <item
+            android:id="@+id/menu_system_default"
+            android:title="Sistem Varsayılanı"
+            android:icon="@android:drawable/ic_menu_manage" />
+        <item
+            android:id="@+id/menu_takvim"
+            android:title="Günün İlhamı"
+            android:icon="@android:drawable/ic_menu_my_calendar" />
+    </group>
+
 </menu>

@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
 
     <application
         android:allowBackup="true"
@@ -13,6 +15,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Zikirmatik">
+        <activity
+            android:name=".TakvimActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SadakaAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".SadakaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TextField"
+            android:exported="false" />
         <activity
             android:name=".ZikirListeActivity"
             android:exported="false" />
