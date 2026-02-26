@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0F1A13"
@@ -11,6 +13,61 @@
         android:background="#1B2B21"
         android:orientation="vertical"
         android:paddingTop="16dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardSonOkunan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="#2AFFFFFF"
+            app:cardCornerRadius="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_menu_recent_history"
+                    app:tint="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/txtSonOkunanSure"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Son Okunan: Bakara"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/btnDevamEt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Devam Et"
+                    android:textSize="12sp"
+                    android:backgroundTint="#FFC107"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <EditText
+            android:id="@+id/editSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Sure Ara..."
+            android:padding="12dp"
+            android:layout_margin="30dp"
+            android:background="@color/kuran_ana_yesil"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:textColor="@android:color/white"
+            android:textColorHint="#80FFFFFF" />
 
         <TextView
             android:layout_width="wrap_content"

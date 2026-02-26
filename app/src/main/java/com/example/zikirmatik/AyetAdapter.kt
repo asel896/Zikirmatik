@@ -1,17 +1,12 @@
 package com.example.zikirmatik
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class AyetAdapter(private val arapcaList: List<AyetBilgi>, private val mealList: List<AyetBilgi>) :
+class AyetAdapter(private val arapcaList: List<AyetDetay>, private val mealList: List<AyetDetay>) :
     RecyclerView.Adapter<AyetAdapter.AyetViewHolder>() {
 
     class AyetViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -19,15 +14,19 @@ class AyetAdapter(private val arapcaList: List<AyetBilgi>, private val mealList:
         val txtMeal = view.findViewById<TextView>(R.id.txtMealAyet)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        AyetViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.activity_ayet, parent, false))
-
-    override fun onBindViewHolder(holder: AyetViewHolder, position: Int) {
-        holder.txtArapca.text = "${arapcaList[position].text} (${arapcaList[position].numberInSurah})"
-        holder.txtMeal.text = mealList[position].text
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AyetViewHolder {
+        // BURASI ÖNEMLİ: activity_ayet yerine senin ayet satırı tasarımın (item_ayet_oku gibi) olmalı
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.activity_ayet, parent, false)
+        return AyetViewHolder(view)
     }
 
+    override fun onBindViewHolder(holder: AyetViewHolder, position: Int) {
+        val arapcaAyet = arapcaList[position]
+        val mealAyet = mealList[position]
 
+        holder.txtArapca.text = "${arapcaAyet.text} (${arapcaAyet.numberInSurah})"
+        holder.txtMeal.text = mealAyet.text
+    }
 
     override fun getItemCount() = arapcaList.size
 }
