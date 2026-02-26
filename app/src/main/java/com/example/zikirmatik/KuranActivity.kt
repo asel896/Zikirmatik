@@ -19,6 +19,7 @@ class KuranActivity : AppCompatActivity() {
     private lateinit var tabSure: TextView
     private lateinit var tabAyet: TextView
     private lateinit var tabCuz: TextView
+    private val dinamikListe = mutableListOf<FavoriAyet>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,9 +27,11 @@ class KuranActivity : AppCompatActivity() {
 
         initViews()
 
-        // Varsayılan olarak Sureleri yükle
+        // İlk açılışta Sureler sekmesini göster
         selectTab(tabSure)
         sureleriYukle()
+
+        // --- SEKME TIKLAMA OLAYLARI ---
 
         tabSure.setOnClickListener {
             selectTab(tabSure)
@@ -37,8 +40,7 @@ class KuranActivity : AppCompatActivity() {
 
         tabAyet.setOnClickListener {
             selectTab(tabAyet)
-            recyclerView.adapter = null
-            Toast.makeText(this, "Ayetler sekmesi", Toast.LENGTH_SHORT).show()
+            dinamikAyetleriYukle()
         }
 
         tabCuz.setOnClickListener {
@@ -50,9 +52,11 @@ class KuranActivity : AppCompatActivity() {
     private fun initViews() {
         recyclerView = findViewById(R.id.recyclerViewKuran)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
         tabSure = findViewById(R.id.tabSure)
         tabAyet = findViewById(R.id.tabAyet)
         tabCuz = findViewById(R.id.tabCuz)
+
         supportActionBar?.hide()
     }
 
@@ -66,6 +70,7 @@ class KuranActivity : AppCompatActivity() {
         selectedTab.setBackgroundResource(R.drawable.tab_indicator)
     }
 
+    // 1. SEKME: TÜM SURELERİ YÜKLE
     private fun sureleriYukle() {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.alquran.cloud/v1/")
@@ -73,6 +78,7 @@ class KuranActivity : AppCompatActivity() {
             .build()
 
         val api = retrofit.create(KuranApiService::class.java)
+
         api.sureleriGetir().enqueue(object : Callback<SureCevap> {
             override fun onResponse(call: Call<SureCevap>, response: Response<SureCevap>) {
                 if (response.isSuccessful) {
@@ -81,14 +87,54 @@ class KuranActivity : AppCompatActivity() {
                 }
             }
             override fun onFailure(call: Call<SureCevap>, t: Throwable) {
-                Toast.makeText(this@KuranActivity, "Hata!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@KuranActivity, "Sureler yüklenemedi", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
+    // 2. SEKME: RASTGELE 10 AYET (ARAPÇA + TÜRKÇE MEAL)
+    private fun dinamikAyetleriYukle() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.alquran.cloud/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val api = retrofit.create(KuranApiService::class.java)
+        dinamikListe.clear() // Her tıklandığında eski ayetleri temizle
+
+        // 10 adet rastgele ayet ID'si (Toplam 6236 ayet arasından)
+        val rastgeleIdler = List(10) { (1..6236).random() }
+
+        for (id in rastgeleIdler) {
+            api.topluAyetGetir(id).enqueue(object : Callback<TopluAyetCevap> {
+                override fun onResponse(call: Call<TopluAyetCevap>, response: Response<TopluAyetCevap>) {
+                    if (response.isSuccessful) {
+                        val veriler = response.body()?.data
+                        if (veriler != null && veriler.size >= 2) {
+                            // index 0: quran-uthmani (Arapça)
+                            // index 1: tr.diyanet (Türkçe Meal)
+                            val arapca = veriler[0].text
+                            val meal = veriler[1].text
+                            val bilgi = "${veriler[1].surah.englishName}, ${veriler[1].numberInSurah}"
+
+                            dinamikListe.add(FavoriAyet(arapca, meal, bilgi))
+
+                            // Her yeni ayet geldiğinde adapter'ı tazele
+                            recyclerView.adapter = FavoriAyetAdapter(dinamikListe)
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<TopluAyetCevap>, t: Throwable) {
+                    // Hata olursa sessizce devam et
+                }
+            })
+        }
+    }
+
+    // 3. SEKME: CÜZ LİSTESİ (SABİT)
     private fun cuzleriGoster() {
-        val cuzListesi = (1..30).map { "$it. Cüz" }
-        recyclerView.adapter = CuzAdapter(cuzListesi) { cuzNo ->
+        val cuzAdlari = (1..30).map { "$it. Cüz" }
+        recyclerView.adapter = CuzAdapter(cuzAdlari) { cuzNo ->
             Toast.makeText(this, "$cuzNo. Cüz seçildi", Toast.LENGTH_SHORT).show()
         }
     }
